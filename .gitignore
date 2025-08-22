@@ -1,0 +1,11 @@
+/test-databases/
+/include/
+/lib/
+lib64
+/share/
+/bin/
+
+/__pycache__/
+
+create-graph-fig.py
+pyvenv.cfg

@@ -1,0 +1,3 @@
+SQLAlchemy
+networkx
+psycopg[binary]

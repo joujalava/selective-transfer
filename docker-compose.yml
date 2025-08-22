@@ -1,0 +1,35 @@
+services:
+  database:
+    container_name: database-server-dab-p1-b1a78902-db66-4a74-bbd6-66b26e2a3ff7
+    image: postgres:17.5
+    restart: "no"
+    volumes:
+        - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
+    env_file:
+      - project.env
+    ports:
+      - 5432:5432
+
+  flyway-1:
+    image: flyway/flyway:11.10.5-alpine
+    depends_on:
+      - database
+    volumes:
+      - ./flyway/source/sql/:/flyway/sql
+    command: -connectRetries=60 -baselineOnMigrate=true migrate
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://database-server-dab-p1-b1a78902-db66-4a74-bbd6-66b26e2a3ff7:5432/database1
+    env_file:
+      - project.env
+
+  flyway-2:
+    image: flyway/flyway:11.10.5-alpine
+    depends_on:
+      - database
+    volumes:
+      - ./flyway/destination/sql/:/flyway/sql
+    command: -connectRetries=60 -baselineOnMigrate=true migrate
+    environment:
+      - FLYWAY_URL=jdbc:postgresql://database-server-dab-p1-b1a78902-db66-4a74-bbd6-66b26e2a3ff7:5432/database2
+    env_file:
+      - project.env
